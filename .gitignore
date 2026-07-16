@@ -1,9 +1,3 @@
-# Build output - never commit these
-build/
-out/
-bin/
-lib/
-
 # CMake generated
 CMakeCache.txt
 CMakeFiles/
