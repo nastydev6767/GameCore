@@ -1,0 +1,5 @@
+C:\Users\G R Samantaray\Documents\GitHub\GameCore\src\scanner\system_scanner.cpp;C:\Users\G R Samantaray\Documents\GitHub\GameCore\build\src\scanner\GameCore_Scanner.dir\Release\system_scanner.obj
+C:\Users\G R Samantaray\Documents\GitHub\GameCore\src\scanner\cpu\cpu_scanner.cpp;C:\Users\G R Samantaray\Documents\GitHub\GameCore\build\src\scanner\GameCore_Scanner.dir\Release\cpu_scanner.obj
+C:\Users\G R Samantaray\Documents\GitHub\GameCore\src\scanner\gpu\gpu_scanner.cpp;C:\Users\G R Samantaray\Documents\GitHub\GameCore\build\src\scanner\GameCore_Scanner.dir\Release\gpu_scanner.obj
+C:\Users\G R Samantaray\Documents\GitHub\GameCore\src\scanner\ram\ram_scanner.cpp;C:\Users\G R Samantaray\Documents\GitHub\GameCore\build\src\scanner\GameCore_Scanner.dir\Release\ram_scanner.obj
+C:\Users\G R Samantaray\Documents\GitHub\GameCore\src\scanner\windows\windows_scanner.cpp;C:\Users\G R Samantaray\Documents\GitHub\GameCore\build\src\scanner\GameCore_Scanner.dir\Release\windows_scanner.obj

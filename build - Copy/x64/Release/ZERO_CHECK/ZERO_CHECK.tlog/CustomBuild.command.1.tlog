@@ -1,0 +1,10 @@
+^C:\USERS\G R SAMANTARAY\DOCUMENTS\GITHUB\GAMECORE\BUILD\CMAKEFILES\4CE1459841D8460B42A9CA50712555FC\GENERATE.STAMP.RULE
+setlocal
+"C:\Program Files\CMake\bin\cmake.exe" "-SC:/Users/G R Samantaray/Documents/GitHub/GameCore" "-BC:/Users/G R Samantaray/Documents/GitHub/GameCore/build" --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file "C:/Users/G R Samantaray/Documents/GitHub/GameCore/build/GameCore.sln"
+if %errorlevel% neq 0 goto :cmEnd
+:cmEnd
+endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone
+:cmErrorLevel
+exit /b %1
+:cmDone
+if %errorlevel% neq 0 goto :VCEnd
