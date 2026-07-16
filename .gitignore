@@ -1,0 +1,48 @@
+# Build output - never commit these
+build/
+out/
+bin/
+lib/
+
+# CMake generated
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+*.cmake
+!CMakeLists.txt
+!CMake/
+
+# Visual Studio
+.vs/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+*.suo
+*.aps
+
+# Compiled binaries
+*.exe
+*.dll
+*.lib
+*.pdb
+*.obj
+*.ilk
+*.exp
+
+# Logs
+*.log
+*.ini
+gamecore.log
+gamecore.ini
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Temp
+*.tmp
+*.temp
+imgui.zip
+imgui_extract/

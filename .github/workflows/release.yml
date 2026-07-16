@@ -1,0 +1,75 @@
+name: Build and Release GameCore
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify tools
+        run: |
+          cmake --version
+          echo "MSBuild check..."
+          & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Current\Bin\MSBuild.exe" -version
+
+      - name: Configure CMake
+        shell: pwsh
+        run: |
+          cmake -B build `
+                -G "Visual Studio 17 2022" `
+                -A x64 `
+                -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build GameCore
+        shell: pwsh
+        run: cmake --build build --config Release --parallel
+
+      - name: Verify build output
+        shell: pwsh
+        run: |
+          $exe = "build\bin\Release\GameCore.exe"
+          if (Test-Path $exe) {
+            $size = [math]::Round((Get-Item $exe).Length / 1MB, 1)
+            Write-Host "SUCCESS: GameCore.exe built ($size MB)"
+          } else {
+            Write-Error "FAILED: GameCore.exe not found"
+            exit 1
+          }
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: "GameCore ${{ github.ref_name }}"
+          tag_name: ${{ github.ref_name }}
+          body: |
+            ## GameCore ${{ github.ref_name }}
+
+            ### Install (Recommended)
+            1. Download **GameCore_Setup.exe** from the [website](https://nastydev6767.github.io/GameCore)
+            2. Run it — installs GameCore automatically with Start Menu and Desktop shortcuts
+            3. **Run GameCore as Administrator** for full optimization features
+
+            ### Direct Download
+            Download **GameCore.exe** below to run without the installer.
+            Place it anywhere and run as Administrator.
+
+            ### Requirements
+            - Windows 10 or Windows 11 (64-bit only)
+            - Administrator rights (required for memory optimization and service control)
+
+            ### Changelog
+            See [CHANGELOG.md](https://github.com/nastydev6767/GameCore/blob/main/CHANGELOG.md)
+          files: build/bin/Release/GameCore.exe
+          draft: false
+          prerelease: false
+          generate_release_notes: false
