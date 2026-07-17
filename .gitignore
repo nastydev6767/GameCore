@@ -40,3 +40,9 @@ desktop.ini
 *.temp
 imgui.zip
 imgui_extract/
+
+# Build output - never commit these
+build/
+out/
+bin/
+lib/
