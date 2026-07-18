@@ -3,21 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>GameCore — Gaming Optimizer for Windows</title>
-  <meta name="description" content="Free, open source gaming optimizer for Windows. Closes background apps, frees RAM, boosts CPU — automatically." />
+  <title>GameCore — Gaming Optimizer</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg:      #0f0f0f;
-      --surface: #181818;
-      --border:  #272727;
-      --accent:  #3478d4;
-      --accentH: #5a9fd4;
-      --text:    #e8e8e8;
-      --muted:   #7a7a7a;
-      --danger:  #c0392b;
-      --green:   #27ae60;
+      --bg:        #0f0f0f;
+      --surface:   #1a1a1a;
+      --border:    #2a2a2a;
+      --accent:    #3478d4;
+      --accent-h:  #5a9fd4;
+      --text:      #e8e8e8;
+      --muted:     #888;
+      --danger:    #c0392b;
+      --success:   #27ae60;
     }
 
     html { scroll-behavior: smooth; }
@@ -27,385 +26,406 @@
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
                    Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.65;
+      line-height: 1.6;
+      min-height: 100vh;
     }
-
-    a { color: inherit; text-decoration: none; }
 
     /* ── Nav ── */
     nav {
-      position: sticky; top: 0; z-index: 50;
-      background: rgba(15,15,15,0.88);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(15,15,15,0.92);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
-      height: 54px;
-      display: flex; align-items: center;
-      justify-content: space-between;
       padding: 0 2rem;
+      height: 56px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
-    .brand { font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; }
-    .brand span { color: var(--accent); }
-    .nav-links { display: flex; gap: 1.6rem; }
+    .nav-brand {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 0.04em;
+    }
+    .nav-brand span { color: var(--accent); }
+    .nav-links { display: flex; gap: 1.8rem; }
     .nav-links a {
-      font-size: 0.875rem;
       color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
       transition: color 0.2s;
     }
     .nav-links a:hover { color: var(--text); }
 
     /* ── Hero ── */
     .hero {
-      max-width: 700px;
+      max-width: 760px;
       margin: 0 auto;
-      padding: 6rem 2rem 5rem;
+      padding: 7rem 2rem 5rem;
       text-align: center;
     }
 
-    .pill {
+    .badge {
       display: inline-block;
-      background: rgba(52,120,212,0.12);
-      border: 1px solid rgba(52,120,212,0.3);
-      color: var(--accentH);
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      padding: 0.28rem 0.85rem;
+      background: rgba(52,120,212,0.15);
+      border: 1px solid rgba(52,120,212,0.35);
+      color: var(--accent-h);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      padding: 0.3rem 0.9rem;
       border-radius: 100px;
-      margin-bottom: 1.6rem;
+      margin-bottom: 1.8rem;
+      text-transform: uppercase;
     }
 
     h1 {
-      font-size: clamp(2rem, 5.5vw, 3.2rem);
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
       font-weight: 800;
-      line-height: 1.12;
-      letter-spacing: -0.025em;
-      margin-bottom: 1.1rem;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.2rem;
     }
-    h1 em { font-style: normal; color: var(--accent); }
+    h1 span { color: var(--accent); }
 
-    .sub {
-      font-size: 1rem;
+    .hero-sub {
+      font-size: 1.05rem;
       color: var(--muted);
-      max-width: 480px;
-      margin: 0 auto 2.6rem;
+      max-width: 520px;
+      margin: 0 auto 2.8rem;
     }
 
-    .cta-row {
-      display: flex;
-      gap: 0.75rem;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .btn {
+    .btn-primary {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      font-size: 0.9rem;
-      font-weight: 600;
-      padding: 0.75rem 1.6rem;
-      border-radius: 8px;
-      transition: all 0.18s;
-      cursor: pointer;
-      border: none;
-    }
-    .btn-primary {
+      gap: 0.6rem;
       background: var(--accent);
       color: #fff;
+      font-size: 1rem;
+      font-weight: 600;
+      padding: 0.85rem 2rem;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+      border: none;
+      cursor: pointer;
     }
     .btn-primary:hover {
-      background: var(--accentH);
+      background: var(--accent-h);
       transform: translateY(-1px);
-      box-shadow: 0 4px 20px rgba(52,120,212,0.35);
     }
-    .btn-outline {
+    .btn-primary svg {
+      width: 18px; height: 18px;
+      fill: currentColor;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
       background: transparent;
       color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 500;
+      padding: 0.85rem 1.6rem;
+      border-radius: 8px;
+      text-decoration: none;
       border: 1px solid var(--border);
+      transition: color 0.2s, border-color 0.2s;
+      margin-left: 0.8rem;
     }
-    .btn-outline:hover { color: var(--text); border-color: #555; }
+    .btn-secondary:hover {
+      color: var(--text);
+      border-color: var(--muted);
+    }
 
-    .hero-note {
-      margin-top: 1.2rem;
-      font-size: 0.78rem;
+    .hero-meta {
+      margin-top: 1.4rem;
+      font-size: 0.82rem;
       color: var(--muted);
     }
-    .hero-note a { text-decoration: underline; }
+    .hero-meta a { color: var(--muted); text-decoration: underline; }
 
-    /* ── Stats bar ── */
-    .stats {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 2rem;
-      display: flex;
-      justify-content: center;
-      gap: 4rem;
-      flex-wrap: wrap;
-    }
-    .stat { text-align: center; }
-    .stat-n {
-      font-size: 1.8rem;
-      font-weight: 800;
-      color: var(--accent);
-      line-height: 1;
-    }
-    .stat-l {
-      font-size: 0.78rem;
-      color: var(--muted);
-      margin-top: 0.25rem;
-    }
-
-    /* ── Section ── */
-    section {
-      max-width: 880px;
+    /* ── Features ── */
+    .section {
+      max-width: 900px;
       margin: 0 auto;
-      padding: 4.5rem 2rem;
+      padding: 4rem 2rem;
     }
 
-    .s-label {
-      font-size: 0.7rem;
+    .section-label {
+      font-size: 0.78rem;
       font-weight: 700;
-      letter-spacing: 0.12em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--accent);
-      margin-bottom: 0.5rem;
-    }
-    section h2 {
-      font-size: 1.7rem;
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    .s-sub {
-      color: var(--muted);
-      font-size: 0.92rem;
-      max-width: 480px;
-      margin-bottom: 2.4rem;
+      margin-bottom: 0.6rem;
     }
 
-    /* ── Feature grid ── */
-    .grid {
+    .section h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    .section-sub {
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      max-width: 500px;
+    }
+
+    .features {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 1rem;
     }
 
-    .card {
+    .feature-card {
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1.3rem 1.5rem;
+      padding: 1.4rem 1.6rem;
       transition: border-color 0.2s;
     }
-    .card:hover { border-color: #3a3a3a; }
-    .card-icon {
-      font-size: 1.3rem;
-      margin-bottom: 0.75rem;
-    }
-    .card h3 { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.3rem; }
-    .card p  { font-size: 0.82rem; color: var(--muted); line-height: 1.5; }
+    .feature-card:hover { border-color: #444; }
 
-    /* ── Steps ── */
+    .feature-icon {
+      width: 36px; height: 36px;
+      background: rgba(52,120,212,0.12);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 0.9rem;
+      font-size: 1.1rem;
+    }
+
+    .feature-card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .feature-card p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* ── Stats ── */
+    .stats {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 2.5rem 2rem;
+      display: flex;
+      justify-content: center;
+      gap: 5rem;
+      flex-wrap: wrap;
+    }
+
+    .stat { text-align: center; }
+    .stat-num {
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    .stat-label {
+      font-size: 0.82rem;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    /* ── How it works ── */
     .steps {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1.5rem;
       counter-reset: step;
     }
-    .step { counter-increment: step; padding-left: 2.6rem; position: relative; }
+
+    .step {
+      position: relative;
+      padding-left: 3rem;
+    }
     .step::before {
+      counter-increment: step;
       content: counter(step);
-      position: absolute; left: 0; top: 0;
-      width: 26px; height: 26px;
+      position: absolute;
+      left: 0; top: 0;
+      width: 28px; height: 28px;
       background: var(--accent);
       color: #fff;
       border-radius: 50%;
-      font-size: 0.75rem; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem;
+      font-weight: 700;
     }
-    .step h3 { font-size: 0.9rem; margin-bottom: 0.3rem; }
-    .step p  { font-size: 0.82rem; color: var(--muted); }
-
-    /* ── Divider ── */
-    .divider { border: none; border-top: 1px solid var(--border); }
+    .step h3 { font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .step p  { font-size: 0.84rem; color: var(--muted); }
 
     /* ── Footer ── */
     footer {
       border-top: 1px solid var(--border);
-      padding: 1.8rem 2rem;
+      padding: 2rem;
       text-align: center;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       color: var(--muted);
     }
-    footer a { text-decoration: underline; }
-    footer a:hover { color: var(--text); }
+    footer a { color: var(--muted); text-decoration: underline; }
 
-    /* ── Download icon SVG ── */
-    .dl-icon { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
-    .gh-icon { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+    /* ── Divider ── */
+    hr { border: none; border-top: 1px solid var(--border); }
   </style>
 </head>
 <body>
 
+<!-- Nav -->
 <nav>
-  <div class="brand">Game<span>Core</span></div>
+  <div class="nav-brand">Game<span>Core</span></div>
   <div class="nav-links">
     <a href="#features">Features</a>
     <a href="#how">How it works</a>
-    <a href="https://github.com/nastydev6767/GameCore/releases" target="_blank">Releases</a>
     <a href="https://github.com/nastydev6767/GameCore" target="_blank">GitHub</a>
   </div>
 </nav>
 
 <!-- Hero -->
-<div class="hero">
-  <div class="pill">v1.0 &nbsp;·&nbsp; Free &amp; Open Source</div>
-
-  <h1>Your PC,<br><em>fully optimized</em><br>for every game.</h1>
-
-  <p class="sub">
-    GameCore closes background apps, frees RAM, boosts your CPU,
-    and launches your game — all in one click.
-    No subscription. No bloat. No nonsense.
+<section class="hero">
+  <div class="badge">v1.0 — Free &amp; Open Source</div>
+  <h1>Your PC, <span>fully optimized</span><br>for every game.</h1>
+  <p class="hero-sub">
+    GameCore closes background apps, frees RAM, boosts CPU priority,
+    and launches your game — automatically.
+    No bloat. No subscription. No nonsense.
   </p>
-
-  <div class="cta-row">
-    <a class="btn btn-primary"
-       href="https://github.com/nastydev6767/GameCore/releases/download/installer/GameCore_Setup.exe">
-      <svg class="dl-icon" viewBox="0 0 24 24">
-        <path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-7 2h14v2H5v-2z"/>
-      </svg>
+  <div>
+    <a class="btn-primary"
+       href="https://github.com/nastydev6767/GameCore/releases/latest/download/GameCore_Setup.exe">
+      <svg viewBox="0 0 24 24"><path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-7 2h14v2H5v-2z"/></svg>
       Download GameCore
     </a>
-    <a class="btn btn-outline"
+    <a class="btn-secondary"
        href="https://github.com/nastydev6767/GameCore"
        target="_blank">
-      <svg class="gh-icon" viewBox="0 0 24 24">
-        <path d="M12 .5C5.73.5.5 5.73.5 12c0 5.08 3.29 9.38 7.86 10.9.58.1.79-.25.79-.56v-2c-3.2.7-3.87-1.54-3.87-1.54-.52-1.33-1.28-1.68-1.28-1.68-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.25.73-1.54-2.55-.29-5.23-1.28-5.23-5.68 0-1.25.45-2.28 1.18-3.08-.12-.29-.51-1.46.11-3.04 0 0 .97-.31 3.17 1.18a11.05 11.05 0 0 1 5.78 0c2.2-1.49 3.17-1.18 3.17-1.18.62 1.58.23 2.75.11 3.04.74.8 1.18 1.83 1.18 3.08 0 4.41-2.69 5.39-5.25 5.67.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56C20.71 21.38 24 17.08 24 12 24 5.73 18.27.5 12 .5z"/>
-      </svg>
       View on GitHub
     </a>
   </div>
-
-  <p class="hero-note">
+  <p class="hero-meta">
     Windows 10 / 11 &nbsp;·&nbsp;
-    64-bit &nbsp;·&nbsp;
     Requires Administrator &nbsp;·&nbsp;
     <a href="https://github.com/nastydev6767/GameCore/blob/main/LICENSE">Apache 2.0</a>
   </p>
-</div>
+</section>
 
 <!-- Stats -->
 <div class="stats">
   <div class="stat">
-    <div class="stat-n">35+</div>
-    <div class="stat-l">Game profiles</div>
+    <div class="stat-num">35+</div>
+    <div class="stat-label">Game profiles</div>
   </div>
   <div class="stat">
-    <div class="stat-n">2 GB+</div>
-    <div class="stat-l">RAM freed on average</div>
+    <div class="stat-num">2 GB+</div>
+    <div class="stat-label">RAM freed on average</div>
   </div>
   <div class="stat">
-    <div class="stat-n">0</div>
-    <div class="stat-l">Extra installs required</div>
+    <div class="stat-num">0</div>
+    <div class="stat-label">Background services running</div>
   </div>
   <div class="stat">
-    <div class="stat-n">Free</div>
-    <div class="stat-l">Always, forever</div>
+    <div class="stat-num">Free</div>
+    <div class="stat-label">Always, forever</div>
   </div>
 </div>
 
 <!-- Features -->
-<section id="features">
-  <div class="s-label">Features</div>
+<section class="section" id="features">
+  <div class="section-label">Features</div>
   <h2>Everything your game needs to run at its best</h2>
-  <p class="s-sub">
-    GameCore does in one click what used to take 20 minutes of manual tweaking.
+  <p class="section-sub">
+    GameCore does in one click what used to take 20 minutes of manual work.
   </p>
 
-  <div class="grid">
-    <div class="card">
-      <div class="card-icon">⚡</div>
+  <div class="features">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
       <h3>Smart Process Killer</h3>
-      <p>Closes browsers, updaters, and sync apps.
-         Never touches your stream software, system files, or Discord.</p>
+      <p>Closes browsers, sync apps, and background processes.
+         Never touches your stream, Discord, or system files.</p>
     </div>
-    <div class="card">
-      <div class="card-icon">🧠</div>
+    <div class="feature-card">
+      <div class="feature-icon">🧠</div>
       <h3>RAM Optimizer</h3>
-      <p>3-step standby list clear frees 1–3 GB that Windows
-         keeps occupied for no reason.</p>
+      <p>Three-step standby list clear frees 1–3 GB of RAM
+         that Windows keeps occupied for no reason.</p>
     </div>
-    <div class="card">
-      <div class="card-icon">🔥</div>
+    <div class="feature-card">
+      <div class="feature-icon">🔥</div>
       <h3>Extreme Mode</h3>
-      <p>Close everything except the game. Max CPU, max fans,
-         zero distractions. Your PC is 100% dedicated to gaming.</p>
+      <p>Close everything except the game. Max fans, max CPU,
+         zero distractions. Your PC is 100% the game's.</p>
     </div>
-    <div class="card">
-      <div class="card-icon">🎬</div>
+    <div class="feature-card">
+      <div class="feature-icon">🎬</div>
       <h3>Streamer Mode</h3>
-      <p>Protects OBS, Streamlabs, Discord, and camera apps so
-         your stream stays live while everything else is closed.</p>
+      <p>Protects OBS, Streamlabs, Discord, and camera apps
+         so your stream stays live while everything else is closed.</p>
     </div>
-    <div class="card">
-      <div class="card-icon">🎮</div>
+    <div class="feature-card">
+      <div class="feature-icon">🎮</div>
       <h3>Steam Integration</h3>
-      <p>Launches Steam games through the Steam protocol so all
-         your saved launch options (like -dx11) are always preserved.</p>
+      <p>Launches Steam games through the Steam protocol so
+         all your saved launch options (like -dx11) are preserved.</p>
     </div>
-    <div class="card">
-      <div class="card-icon">📊</div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
       <h3>Live Monitor</h3>
-      <p>Watch CPU usage, RAM, temperature, and FPS in real time
-         while your game runs. Open Task Manager to verify the numbers.</p>
+      <p>Watch CPU, RAM, temperature, and FPS in real time
+         while your game runs. Open Task Manager to verify.</p>
     </div>
-    <div class="card">
-      <div class="card-icon">🔄</div>
+    <div class="feature-card">
+      <div class="feature-icon">🔄</div>
       <h3>Full Restore</h3>
       <p>When your game closes, GameCore restores your power plan,
-         restarts paused services, and relaunches safe background apps.</p>
+         restarts paused services, and relaunches safe apps.</p>
     </div>
-    <div class="card">
-      <div class="card-icon">🕹️</div>
+    <div class="feature-card">
+      <div class="feature-icon">🕹️</div>
       <h3>Any Launcher</h3>
       <p>Works with Steam, Epic, GOG, and any custom launcher.
-         Browse to the .exe and add it manually in one click.</p>
+         Just browse to the .exe and add it manually.</p>
     </div>
   </div>
 </section>
 
-<hr class="divider">
+<hr>
 
 <!-- How it works -->
-<section id="how">
-  <div class="s-label">How it works</div>
-  <h2>One click. Better gaming.</h2>
-  <p class="s-sub" style="margin-bottom:2rem">
+<section class="section" id="how">
+  <div class="section-label">How it works</div>
+  <h2>Three steps to a better gaming session</h2>
+  <p class="section-sub" style="margin-bottom:2rem">
     GameCore handles everything before, during, and after your game.
   </p>
 
   <div class="steps">
     <div class="step">
-      <h3>Pick your game</h3>
-      <p>GameCore auto-detects Steam, Epic, and GOG libraries.
-         Add any other game manually with the file browser.</p>
+      <h3>Before you play</h3>
+      <p>Click Launch in GameCore. It scans your hardware, kills background
+         apps, frees RAM, and sets your CPU to performance mode.</p>
     </div>
     <div class="step">
-      <h3>Click Launch</h3>
-      <p>GameCore closes background apps, frees RAM, sets CPU to
-         performance mode, then launches your game.</p>
+      <h3>While you play</h3>
+      <p>GameCore monitors CPU, RAM, and temperature in the background.
+         If something spikes, it adjusts automatically.</p>
     </div>
     <div class="step">
-      <h3>Play normally</h3>
-      <p>GameCore monitors CPU, RAM, and temperature silently
-         in the background. Nothing to do.</p>
+      <h3>After you finish</h3>
+      <p>When your game closes, GameCore restores everything —
+         power plan, services, even Spotify and OneDrive.</p>
     </div>
     <div class="step">
-      <h3>Everything restored</h3>
-      <p>When you close the game, GameCore restores your PC
-         exactly to how it was before.</p>
+      <h3>Even without opening it</h3>
+      <p>GameCore sits in your system tray and auto-optimizes
+         the moment it detects a game launched anywhere.</p>
     </div>
   </div>
 </section>
@@ -414,7 +434,7 @@
 <footer>
   <p>
     GameCore is free and open source under the
-    <a href="https://github.com/nastydev6767/GameCore/blob/main/LICENSE">Apache 2.0 License</a>
+    <a href="https://github.com/nastydev6767/GameCore/blob/main/LICENSE">Apache 2.0 License</a>.
     &nbsp;·&nbsp;
     <a href="https://github.com/nastydev6767/GameCore">GitHub</a>
     &nbsp;·&nbsp;
@@ -422,7 +442,7 @@
     &nbsp;·&nbsp;
     <a href="https://github.com/nastydev6767/GameCore/releases">All Releases</a>
   </p>
-  <p style="margin-top:0.4rem">Built by nastydev6767</p>
+  <p style="margin-top:0.5rem">Built by nastydev6767</p>
 </footer>
 
 </body>
