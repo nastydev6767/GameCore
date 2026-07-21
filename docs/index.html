@@ -132,7 +132,11 @@
       font-size: 0.78rem;
       color: var(--muted);
     }
-    .hero-note a { text-decoration: underline; }
+    .hero-note a {
+      text-decoration: underline;
+      color: var(--muted);
+    }
+    .hero-note a:hover { color: var(--text); }
 
     /* ── Stats bar ── */
     .stats {
@@ -150,6 +154,8 @@
       font-weight: 800;
       color: var(--accent);
       line-height: 1;
+      min-width: 3ch;
+      display: inline-block;
     }
     .stat-l {
       font-size: 0.78rem;
@@ -238,16 +244,28 @@
       font-size: 0.8rem;
       color: var(--muted);
     }
-    footer a { text-decoration: underline; }
+    footer a {
+      text-decoration: underline;
+      color: var(--muted);
+    }
     footer a:hover { color: var(--text); }
 
-    /* ── Download icon SVG ── */
+    /* ── Icons ── */
     .dl-icon { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
     .gh-icon { width: 16px; height: 16px; fill: currentColor; flex-shrink: 0; }
+
+    /* ── Download count pulse animation ── */
+    @keyframes pulse {
+      0%   { opacity: 1; }
+      50%  { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+    .dl-loading { animation: pulse 1.2s ease-in-out infinite; }
   </style>
 </head>
 <body>
 
+<!-- Nav -->
 <nav>
   <div class="brand">Game<span>Core</span></div>
   <div class="nav-links">
@@ -272,7 +290,7 @@
 
   <div class="cta-row">
     <a class="btn btn-primary"
-       href="https://github.com/nastydev6767/GameCore/releases/latest/download/GameCore_Setup.exe">
+       href="https://github.com/nastydev6767/GameCore/releases/download/installer/GameCore_Setup.exe">
       <svg class="dl-icon" viewBox="0 0 24 24">
         <path d="M12 16l-6-6h4V4h4v6h4l-6 6zm-7 2h14v2H5v-2z"/>
       </svg>
@@ -307,8 +325,8 @@
     <div class="stat-l">RAM freed on average</div>
   </div>
   <div class="stat">
-    <div class="stat-n">0</div>
-    <div class="stat-l">Extra installs required</div>
+    <div class="stat-n dl-loading" id="dl-count">—</div>
+    <div class="stat-l">Total downloads</div>
   </div>
   <div class="stat">
     <div class="stat-n">Free</div>
@@ -424,6 +442,63 @@
   </p>
   <p style="margin-top:0.4rem">Built by nastydev6767</p>
 </footer>
+
+<script>
+  // Fetch total download count across ALL releases from GitHub API
+  // Updates live on every page visit — no server needed
+  async function loadDownloadCount() {
+    const el = document.getElementById('dl-count');
+    try {
+      const res = await fetch(
+        'https://api.github.com/repos/nastydev6767/GameCore/releases',
+        { headers: { 'Accept': 'application/vnd.github+json' } }
+      );
+
+      if (!res.ok) throw new Error('API error ' + res.status);
+
+      const releases = await res.json();
+
+      // Sum downloads across every asset in every release
+      let total = 0;
+      for (const release of releases) {
+        for (const asset of release.assets) {
+          total += asset.download_count;
+        }
+      }
+
+      // Remove loading pulse
+      el.classList.remove('dl-loading');
+
+      if (total === 0) {
+        el.textContent = '0';
+        return;
+      }
+
+      // Animate count up over ~1.2 seconds
+      const duration = 1200;
+      const steps    = 50;
+      const interval = duration / steps;
+      let current    = 0;
+
+      const timer = setInterval(() => {
+        current += total / steps;
+        if (current >= total) {
+          clearInterval(timer);
+          el.textContent = total.toLocaleString();
+        } else {
+          el.textContent = Math.floor(current).toLocaleString();
+        }
+      }, interval);
+
+    } catch (e) {
+      // API failed or rate limited — show dash, never break UI
+      el.classList.remove('dl-loading');
+      el.textContent = '—';
+    }
+  }
+
+  loadDownloadCount();
+</script>
 
 </body>
 </html>
