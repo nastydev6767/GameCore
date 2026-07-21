@@ -6,12 +6,22 @@
 
 namespace GameCore::Detector {
 
+enum class GameSource {
+    Unknown,
+    Steam,
+    Epic,
+    Gog,
+    Running,  // detected from running process
+    Manual,   // added by user
+};
+
 struct DetectedGame {
     std::string name;
     std::string executableName;
     std::string executablePath;
     DWORD       processId;
     bool        isRunning;
+    GameSource  source { GameSource::Unknown };
 };
 
 class GameDetector {

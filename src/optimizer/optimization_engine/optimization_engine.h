@@ -4,6 +4,8 @@
 #include "optimizer/memory_optimizer/memory_optimizer.h"
 #include "optimizer/cpu_optimizer/cpu_optimizer.h"
 #include "optimizer/service_optimizer/service_optimizer.h"
+#include "optimizer/network_optimizer/network_optimizer.h"
+#include "optimizer/registry_optimizer/registry_optimizer.h"
 #include "optimizer/restore_engine/restore_engine.h"
 #include "detector/game_detector/game_db.h"
 
@@ -22,6 +24,8 @@ struct OptimizationResult {
     bool   cpuBoosted;
     bool   powerPlanChanged;
     bool   extremeModeApplied;
+    bool   networkOptimized;
+    bool   registryTweaked;
     std::string optimizationProfile;
 };
 
@@ -42,11 +46,13 @@ public:
     }
 
 private:
-    ProcessOptimizer processOptimizer_;
-    MemoryOptimizer  memoryOptimizer_;
-    CpuOptimizer     cpuOptimizer_;
-    ServiceOptimizer serviceOptimizer_;
-    RestoreEngine    restoreEngine_;
+    ProcessOptimizer  processOptimizer_;
+    MemoryOptimizer   memoryOptimizer_;
+    CpuOptimizer      cpuOptimizer_;
+    ServiceOptimizer  serviceOptimizer_;
+    NetworkOptimizer  networkOptimizer_;
+    RegistryOptimizer registryOptimizer_;
+    RestoreEngine     restoreEngine_;
 
     static void Report(const ProgressCallback& cb,
                        float progress,

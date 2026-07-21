@@ -3,6 +3,8 @@ add_library(GameCore_Optimizer STATIC
     memory_optimizer/memory_optimizer.cpp
     cpu_optimizer/cpu_optimizer.cpp
     service_optimizer/service_optimizer.cpp
+    network_optimizer/network_optimizer.cpp
+    registry_optimizer/registry_optimizer.cpp
     restore_engine/restore_engine.cpp
     optimization_engine/optimization_engine.cpp
 )
@@ -27,4 +29,8 @@ target_link_libraries(GameCore_Optimizer
         powrprof
         psapi
         shell32
+        iphlpapi
+        ws2_32
+        qwave
+        dnsapi
 )

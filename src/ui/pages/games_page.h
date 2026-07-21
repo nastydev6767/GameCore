@@ -28,14 +28,23 @@ public:
 
 private:
     std::vector<Detector::DetectedGame> games_;
-    GameSourceFilter filter_ { GameSourceFilter::All };
-    char addGamePathBuffer_[512] { 0 };
-    bool showAddDialog_ { false };
+    GameSourceFilter filter_       { GameSourceFilter::All };
+    char addGamePathBuffer_[512]   { 0 };
+    char addGameError_[256]        { 0 };
+    char searchBuffer_[256]        { 0 };
+    bool showAddDialog_            { false };
+    bool needsRefresh_             { false };
+
+    bool PassesFilter(const Detector::DetectedGame& game) const;
 
     void RenderFilterTabs();
     void RenderGameRow(const Detector::DetectedGame& game,
                        LaunchCallback onLaunch);
     void RenderAddGameDialog();
+
+public:
+    bool NeedsRefresh() const  { return needsRefresh_; }
+    void ClearRefresh()        { needsRefresh_ = false; }
 };
 
 } // namespace GameCore::UI

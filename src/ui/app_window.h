@@ -19,6 +19,7 @@
 #include "detector/game_detector/game_detector.h"
 #include "detector/game_detector/game_db.h"
 #include "optimizer/optimization_engine/optimization_engine.h"
+#include "core/config/config.h"
 
 namespace GameCore::UI {
 
@@ -65,6 +66,11 @@ private:
     void HideToTray();
     void ShowFromTray();
     void ExitApplication();
+
+    void LoadSettings();
+    void SaveSettings();
+
+    static constexpr const char* kConfigPath = "gamecore.ini";
 
     HWND                     hwnd_         { nullptr };
     ID3D11Device*            device_        { nullptr };

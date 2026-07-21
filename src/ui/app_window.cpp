@@ -162,9 +162,44 @@ bool AppWindow::Init(HINSTANCE hInstance)
     systemInfo_ = scanner_.Scan();
     GC_LOG_INFO("UI initialized. CPU: " + systemInfo_.cpuName);
 
+    LoadSettings();
     gamesPage_->RefreshGames(gameDetector_);
 
     return true;
+}
+
+void AppWindow::LoadSettings()
+{
+    auto& cfg = GameCore::Core::Config::Instance();
+    cfg.Load(kConfigPath);
+
+    settings_.aggressiveOptimization =
+        cfg.GetBool("Settings", "AggressiveOptimization", false);
+    settings_.autoOptimizeBackground =
+        cfg.GetBool("Settings", "AutoOptimizeBackground", true);
+    settings_.minimizeToTray =
+        cfg.GetBool("Settings", "MinimizeToTray", true);
+    settings_.extremeMode =
+        cfg.GetBool("Settings", "ExtremeMode", false);
+
+    GC_LOG_INFO("Settings loaded from " + std::string(kConfigPath));
+}
+
+void AppWindow::SaveSettings()
+{
+    auto& cfg = GameCore::Core::Config::Instance();
+
+    cfg.Set("Settings", "AggressiveOptimization",
+            settings_.aggressiveOptimization ? "true" : "false");
+    cfg.Set("Settings", "AutoOptimizeBackground",
+            settings_.autoOptimizeBackground ? "true" : "false");
+    cfg.Set("Settings", "MinimizeToTray",
+            settings_.minimizeToTray ? "true" : "false");
+    cfg.Set("Settings", "ExtremeMode",
+            settings_.extremeMode ? "true" : "false");
+
+    cfg.Save(kConfigPath);
+    GC_LOG_INFO("Settings saved to " + std::string(kConfigPath));
 }
 
 void AppWindow::HideToTray()
@@ -337,6 +372,30 @@ void AppWindow::RenderCurrentPage()
         ImGui::TextColored(Theme::TextSecondary, "%s",
                            optimizeStatus_.c_str());
 
+        if (optimizeProgress_ >= 1.0f) {
+            ImGui::Spacing();
+            ImGui::Spacing();
+            const auto& snap = optimizer_.GetSnapshot();
+            ImGui::TextColored(Theme::Success,
+                "✓ %d processes closed   ✓ %.0f MB freed   ✓ %d services paused",
+                static_cast<int>(snap.killedProcesses.size()),
+                snap.freedMemoryMb,
+                static_cast<int>(snap.stoppedServices.size()));
+
+            if (snap.networkTweakResult.naggleDisabled ||
+                snap.networkTweakResult.networkThrottleOff)
+            {
+                ImGui::TextColored(Theme::Success,
+                    "✓ Network: Nagle off, DNS flushed, QoS applied");
+            }
+            if (snap.registryTweakResult.gameDvrDisabled ||
+                snap.registryTweakResult.mmcssGameProfileSet)
+            {
+                ImGui::TextColored(Theme::Success,
+                    "✓ Registry: GameDVR off, HAGS on, MMCSS boosted");
+            }
+        }
+
         ImGui::EndGroup();
 
     } else {
@@ -364,9 +423,18 @@ void AppWindow::RenderCurrentPage()
                     });
                 break;
 
-            case ActiveTab::Settings:
+            case ActiveTab::Settings: {
+                AppSettings prev = settings_;
                 settingsPage_->Render(settings_);
+                if (settings_.aggressiveOptimization != prev.aggressiveOptimization ||
+                    settings_.autoOptimizeBackground != prev.autoOptimizeBackground ||
+                    settings_.minimizeToTray         != prev.minimizeToTray         ||
+                    settings_.extremeMode            != prev.extremeMode)
+                {
+                    SaveSettings();
+                }
                 break;
+            }
         }
     }
 
@@ -403,6 +471,12 @@ void AppWindow::Run()
         telemetry_.Update();
         CheckBackgroundGames();
 
+        // Handle game list refresh requested from UI
+        if (gamesPage_->NeedsRefresh()) {
+            gamesPage_->RefreshGames(gameDetector_);
+            gamesPage_->ClearRefresh();
+        }
+
         if (windowVisible_) {
             NewFrame();
             RenderTopNav();
@@ -417,6 +491,8 @@ void AppWindow::Run()
 
 void AppWindow::Shutdown()
 {
+    SaveSettings();
+
     if (optimizer_.IsOptimized())
         optimizer_.Restore();
 

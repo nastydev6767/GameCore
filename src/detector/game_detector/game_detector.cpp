@@ -79,6 +79,7 @@ std::vector<DetectedGame> GameDetector::ScanProcesses() const {
             game.processId      = entry.th32ProcessID;
             game.isRunning      = true;
             game.executablePath = GetProcessPath(entry.th32ProcessID);
+            game.source         = GameSource::Running;
 
             std::string name = exeName;
             if (name.size() > 4 && name.substr(name.size()-4) == ".exe")
@@ -179,6 +180,7 @@ std::vector<DetectedGame> GameDetector::ScanSteamLibrary() const {
                 game.executablePath = libPath + "\\common\\" + installDir;
                 game.isRunning      = false;
                 game.processId      = 0;
+                game.source         = GameSource::Steam;
                 games.push_back(game);
             }
         }
@@ -224,6 +226,7 @@ std::vector<DetectedGame> GameDetector::ScanEpicLibrary() const {
             game.executablePath = instDir;
             game.isRunning      = false;
             game.processId      = 0;
+            game.source         = GameSource::Epic;
             games.push_back(game);
         }
     }
@@ -268,6 +271,7 @@ std::vector<DetectedGame> GameDetector::ScanGogLibrary() const {
             game.executablePath = installPath;
             game.isRunning      = false;
             game.processId      = 0;
+            game.source         = GameSource::Gog;
             games.push_back(game);
         }
     }

@@ -3,6 +3,8 @@
 #include "optimizer/process_optimizer/process_optimizer.h"
 #include "optimizer/cpu_optimizer/cpu_optimizer.h"
 #include "optimizer/service_optimizer/service_optimizer.h"
+#include "optimizer/network_optimizer/network_optimizer.h"
+#include "optimizer/registry_optimizer/registry_optimizer.h"
 
 #include <string>
 #include <vector>
@@ -13,6 +15,8 @@ struct OptimizationSnapshot {
     std::vector<ProcessInfo> killedProcesses;
     std::vector<ServiceInfo> stoppedServices;
     CpuOptimizeResult        cpuChanges;
+    NetworkTweakResult       networkTweakResult;
+    RegistryTweakResult      registryTweakResult;
     double                   freedMemoryMb;
     bool                     isActive { false };
 };
