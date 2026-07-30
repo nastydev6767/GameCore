@@ -1,0 +1,108 @@
+{
+  "_comment": "GameCore thermal database. LHM handles the actual control method automatically. This DB provides GameCore with display metadata and max PWM targets per manufacturer. 'method' values match what ThermalBridge reports via GC_Thermal_GetMethod.",
+
+  "manufacturers": {
+    "ASUSTeK Computer Inc.": { "display": "ASUS",           "method": "lhm_wmi",     "max_pwm": 100, "notes": "ASUSHW v2/v3 WMI" },
+    "ASUS":                  { "display": "ASUS",           "method": "lhm_wmi",     "max_pwm": 100 },
+    "ASUSTek":               { "display": "ASUS",           "method": "lhm_wmi",     "max_pwm": 100 },
+
+    "Dell Inc.":             { "display": "Dell",           "method": "lhm_smm",     "max_pwm": 100, "notes": "Dell SMM via PawnIO DellSMM.amx" },
+    "Dell":                  { "display": "Dell",           "method": "lhm_smm",     "max_pwm": 100 },
+    "Alienware":             { "display": "Alienware",      "method": "lhm_smm",     "max_pwm": 100 },
+
+    "LENOVO":                { "display": "Lenovo",         "method": "lhm_wmi",     "max_pwm": 100, "notes": "Lenovo_FanMethod WMI" },
+    "Lenovo":                { "display": "Lenovo",         "method": "lhm_wmi",     "max_pwm": 100 },
+    "LENOVO IdeaPad":        { "display": "Lenovo IdeaPad", "method": "lhm_wmi",     "max_pwm": 100 },
+    "Lenovo Legion":         { "display": "Lenovo Legion",  "method": "lhm_wmi",     "max_pwm": 100 },
+    "ThinkPad":              { "display": "ThinkPad",       "method": "lhm_wmi",     "max_pwm": 100 },
+
+    "HP":                    { "display": "HP",             "method": "lhm_ec",      "max_pwm": 100 },
+    "Hewlett-Packard":       { "display": "HP",             "method": "lhm_ec",      "max_pwm": 100 },
+    "HP OMEN":               { "display": "HP Omen",        "method": "lhm_ec",      "max_pwm": 100 },
+    "HP Pavilion":           { "display": "HP Pavilion",    "method": "lhm_ec",      "max_pwm": 100 },
+    "HP Spectre":            { "display": "HP Spectre",     "method": "lhm_ec",      "max_pwm": 100 },
+    "HP Victus":             { "display": "HP Victus",      "method": "lhm_ec",      "max_pwm": 100 },
+    "HP Envy":               { "display": "HP Envy",        "method": "lhm_ec",      "max_pwm": 100 },
+
+    "Acer":                  { "display": "Acer",           "method": "lhm_ec",      "max_pwm": 100 },
+    "Acer Predator":         { "display": "Acer Predator",  "method": "lhm_ec",      "max_pwm": 100 },
+    "Acer Nitro":            { "display": "Acer Nitro",     "method": "lhm_ec",      "max_pwm": 100 },
+    "Acer Aspire":           { "display": "Acer Aspire",    "method": "lhm_ec",      "max_pwm": 100 },
+    "Acer Helios":           { "display": "Acer Helios",    "method": "lhm_ec",      "max_pwm": 100 },
+
+    "MSI":                   { "display": "MSI",            "method": "lhm_superio", "max_pwm": 100, "notes": "Nuvoton/ITE Super I/O" },
+    "Micro-Star International Co., Ltd.": { "display": "MSI", "method": "lhm_superio", "max_pwm": 100 },
+    "Micro-Star":            { "display": "MSI",            "method": "lhm_superio", "max_pwm": 100 },
+    "MSI Titan":             { "display": "MSI Titan",      "method": "lhm_superio", "max_pwm": 100 },
+    "MSI Raider":            { "display": "MSI Raider",     "method": "lhm_superio", "max_pwm": 100 },
+    "MSI Stealth":           { "display": "MSI Stealth",    "method": "lhm_superio", "max_pwm": 100 },
+    "MSI Vector":            { "display": "MSI Vector",     "method": "lhm_superio", "max_pwm": 100 },
+
+    "GIGABYTE":              { "display": "Gigabyte",       "method": "lhm_superio", "max_pwm": 100 },
+    "Gigabyte Technology Co., Ltd.": { "display": "Gigabyte", "method": "lhm_superio", "max_pwm": 100 },
+    "AORUS":                 { "display": "Gigabyte AORUS", "method": "lhm_superio", "max_pwm": 100 },
+
+    "Razer":                 { "display": "Razer",          "method": "lhm_hid",     "max_pwm": 100, "notes": "Razer PWM fan controller HID" },
+    "Razer Inc.":            { "display": "Razer",          "method": "lhm_hid",     "max_pwm": 100 },
+    "Razer Blade":           { "display": "Razer Blade",    "method": "lhm_hid",     "max_pwm": 100 },
+
+    "Samsung":               { "display": "Samsung",        "method": "lhm_ec",      "max_pwm": 100 },
+    "Samsung Electronics":   { "display": "Samsung",        "method": "lhm_ec",      "max_pwm": 100 },
+
+    "Toshiba":               { "display": "Toshiba",        "method": "lhm_ec",      "max_pwm": 100 },
+    "Dynabook":              { "display": "Dynabook",       "method": "lhm_ec",      "max_pwm": 100 },
+    "Dynabook Inc.":         { "display": "Dynabook",       "method": "lhm_ec",      "max_pwm": 100 },
+
+    "GPD":                   { "display": "GPD",            "method": "lhm_ec",      "max_pwm": 100 },
+    "GPD Technology":        { "display": "GPD",            "method": "lhm_ec",      "max_pwm": 100 },
+
+    "Framework":             { "display": "Framework",      "method": "lhm_ec",      "max_pwm": 100 },
+    "Framework Computer":    { "display": "Framework",      "method": "lhm_ec",      "max_pwm": 100 },
+
+    "System76":              { "display": "System76",       "method": "lhm_ec",      "max_pwm": 100 },
+
+    "Timi":                  { "display": "Timi (Xiaomi)",  "method": "lhm_ec",      "max_pwm": 100 },
+    "Xiaomi":                { "display": "Xiaomi",         "method": "lhm_ec",      "max_pwm": 100 },
+    "Mi":                    { "display": "Xiaomi Mi",      "method": "lhm_ec",      "max_pwm": 100 },
+    "RedmiBook":             { "display": "Redmi",          "method": "lhm_ec",      "max_pwm": 100 },
+
+    "HUAWEI":                { "display": "Huawei",         "method": "lhm_ec",      "max_pwm": 100 },
+    "Honor":                 { "display": "Honor",          "method": "lhm_ec",      "max_pwm": 100 },
+    "MateBook":              { "display": "Huawei MateBook","method": "lhm_ec",      "max_pwm": 100 },
+
+    "LG":                    { "display": "LG",             "method": "lhm_ec",      "max_pwm": 100 },
+    "LG Electronics":        { "display": "LG",             "method": "lhm_ec",      "max_pwm": 100 },
+
+    "Panasonic":             { "display": "Panasonic",      "method": "lhm_ec",      "max_pwm": 100 },
+    "Fujitsu":               { "display": "Fujitsu",        "method": "lhm_ec",      "max_pwm": 100 },
+    "Fujitsu Limited":       { "display": "Fujitsu",        "method": "lhm_ec",      "max_pwm": 100 },
+
+    "VAIO":                  { "display": "VAIO",           "method": "lhm_ec",      "max_pwm": 100 },
+    "Sony":                  { "display": "Sony VAIO",      "method": "lhm_ec",      "max_pwm": 100 },
+
+    "Apple":                 { "display": "Apple",          "method": "unsupported",  "max_pwm": 0,   "notes": "Boot Camp only — not supported" },
+
+    "Intel":                 { "display": "Intel NUC",      "method": "lhm_ec",      "max_pwm": 100 },
+    "Intel Corporation":     { "display": "Intel NUC",      "method": "lhm_ec",      "max_pwm": 100 },
+
+    "ASRock":                { "display": "ASRock",         "method": "lhm_superio", "max_pwm": 100 },
+    "ASRock Incorporation":  { "display": "ASRock",         "method": "lhm_superio", "max_pwm": 100 },
+
+    "Biostar":               { "display": "Biostar",        "method": "lhm_superio", "max_pwm": 100 },
+    "ECS":                   { "display": "ECS",            "method": "lhm_superio", "max_pwm": 100 },
+
+    "EVGA":                  { "display": "EVGA",           "method": "lhm_superio", "max_pwm": 100 },
+
+    "Clevo":                 { "display": "Clevo/Sager",    "method": "lhm_ec",      "max_pwm": 100 },
+    "Sager":                 { "display": "Sager",          "method": "lhm_ec",      "max_pwm": 100 },
+    "SCHENKER":              { "display": "Schenker XMG",   "method": "lhm_ec",      "max_pwm": 100 },
+    "XMG":                   { "display": "XMG",            "method": "lhm_ec",      "max_pwm": 100 },
+    "Tongfang":              { "display": "Tongfang OEM",   "method": "lhm_ec",      "max_pwm": 100 },
+
+    "MECHREVO":              { "display": "Mechrevo",       "method": "lhm_ec",      "max_pwm": 100 },
+    "Hasee":                 { "display": "Hasee",          "method": "lhm_ec",      "max_pwm": 100 },
+
+    "Generic":               { "display": "Generic",        "method": "lhm_auto",    "max_pwm": 100 },
+    "Unknown":               { "display": "Unknown",        "method": "lhm_auto",    "max_pwm": 100 }
+  }
+}

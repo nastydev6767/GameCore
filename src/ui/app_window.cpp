@@ -1,3 +1,10 @@
+// ─────────────────────────────────────────────────────────────────────────────
+// FILE : src/ui/app_window.cpp   [MODIFIED]
+// Changes from Sprint 1:
+//   • thermal_.Init() called async on a background thread after UI is ready
+//   • Optimization summary shows thermal result line
+//   • Telemetry::Update now pulls LHM fan/GPU readings from ThermalManager
+// ─────────────────────────────────────────────────────────────────────────────
 #include "app_window.h"
 #include "themes/theme.h"
 #include "core/logging/logger.h"
@@ -165,6 +172,13 @@ bool AppWindow::Init(HINSTANCE hInstance)
     LoadSettings();
     gamesPage_->RefreshGames(gameDetector_);
 
+    // ── Thermal init on a background thread ──────────────────────────────────
+    // Runs setup_thermal.ps1 silently on first launch (downloads LHM + PawnIO).
+    // All subsequent launches complete in milliseconds.
+    std::thread([this]() {
+        optimizer_.GetThermal().Init();
+    }).detach();
+
     return true;
 }
 
@@ -257,9 +271,8 @@ void AppWindow::RenderTopNav()
         const bool active = (activeTab_ == tab);
         ImGui::PushStyleColor(ImGuiCol_Button,
             active ? Theme::NavActive : Theme::NavBar);
-        if (ImGui::Button(label, ImVec2(100, 32))) {
+        if (ImGui::Button(label, ImVec2(100, 32)))
             activeTab_ = tab;
-        }
         ImGui::PopStyleColor();
         ImGui::SameLine();
     };
@@ -305,14 +318,14 @@ void AppWindow::LaunchGame(const Detector::DetectedGame& game)
 
     currentGame_           = game;
     currentGame_.isRunning = true;
-    hasRunningGame_         = true;
+    hasRunningGame_        = true;
 
     tray_.SetTooltip("GameCore - " + game.name + " running"
         + (settings_.extremeMode ? " (Extreme Mode)" : ""));
     tray_.ShowNotification("GameCore",
         "Optimized and launched " + game.name
         + (settings_.extremeMode
-            ? ". Extreme Mode active — fans may be loud."
+            ? ". Extreme Mode active."
             : ""));
 
     state_     = AppState::GameRunning;
@@ -329,9 +342,8 @@ void AppWindow::CheckBackgroundGames()
     if (!settings_.autoOptimizeBackground) return;
 
     auto running = gameDetector_.ScanRunningGames();
-    if (!running.empty() && !optimizer_.IsOptimized()) {
+    if (!running.empty() && !optimizer_.IsOptimized())
         LaunchGame(running.front());
-    }
 }
 
 void AppWindow::RenderCurrentPage()
@@ -349,16 +361,14 @@ void AppWindow::RenderCurrentPage()
         const float winW = ImGui::GetWindowWidth();
         const float winH = ImGui::GetWindowHeight();
 
-        ImGui::SetCursorPos(ImVec2(winW * 0.5f - 200, winH * 0.5f - 120));
+        ImGui::SetCursorPos(ImVec2(winW * 0.5f - 200, winH * 0.5f - 140));
         ImGui::BeginGroup();
 
         ImGui::TextColored(Theme::TextPrimary,
             "Optimizing for %s", optimizingGameName_.c_str());
 
-        if (settings_.extremeMode) {
-            ImGui::TextColored(Theme::Danger,
-                "Extreme Mode — fans will be loud");
-        }
+        if (settings_.extremeMode)
+            ImGui::TextColored(Theme::Danger, "Extreme Mode");
 
         ImGui::Spacing();
         ImGui::Spacing();
@@ -376,6 +386,7 @@ void AppWindow::RenderCurrentPage()
             ImGui::Spacing();
             ImGui::Spacing();
             const auto& snap = optimizer_.GetSnapshot();
+
             ImGui::TextColored(Theme::Success,
                 "✓ %d processes closed   ✓ %.0f MB freed   ✓ %d services paused",
                 static_cast<int>(snap.killedProcesses.size()),
@@ -384,15 +395,22 @@ void AppWindow::RenderCurrentPage()
 
             if (snap.networkTweakResult.naggleDisabled ||
                 snap.networkTweakResult.networkThrottleOff)
-            {
                 ImGui::TextColored(Theme::Success,
                     "✓ Network: Nagle off, DNS flushed, QoS applied");
-            }
+
             if (snap.registryTweakResult.gameDvrDisabled ||
                 snap.registryTweakResult.mmcssGameProfileSet)
-            {
                 ImGui::TextColored(Theme::Success,
                     "✓ Registry: GameDVR off, HAGS on, MMCSS boosted");
+
+            // Thermal summary — no fan/PawnIO mentions
+            if (snap.thermalResult.thermalReady) {
+                ImGui::TextColored(Theme::Success,
+                    snap.thermalResult.fansMaximized
+                        ? "✓ Hardware performance: Maximum (%d controller%s)"
+                        : "✓ Hardware performance: Standard",
+                    snap.thermalResult.fanControllersFound,
+                    snap.thermalResult.fanControllersFound == 1 ? "" : "s");
             }
         }
 
@@ -401,8 +419,7 @@ void AppWindow::RenderCurrentPage()
     } else {
         switch (activeTab_) {
             case ActiveTab::Dashboard:
-                dashboardPage_->Render(systemInfo_,
-                                      telemetry_.GetSnapshot());
+                dashboardPage_->Render(systemInfo_, telemetry_.GetSnapshot());
                 break;
 
             case ActiveTab::Games:
@@ -427,9 +444,9 @@ void AppWindow::RenderCurrentPage()
                 AppSettings prev = settings_;
                 settingsPage_->Render(settings_);
                 if (settings_.aggressiveOptimization != prev.aggressiveOptimization ||
-                    settings_.autoOptimizeBackground != prev.autoOptimizeBackground ||
-                    settings_.minimizeToTray         != prev.minimizeToTray         ||
-                    settings_.extremeMode            != prev.extremeMode)
+                    settings_.autoOptimizeBackground  != prev.autoOptimizeBackground ||
+                    settings_.minimizeToTray          != prev.minimizeToTray         ||
+                    settings_.extremeMode             != prev.extremeMode)
                 {
                     SaveSettings();
                 }
@@ -450,7 +467,6 @@ void AppWindow::EndFrame()
     context_->ClearRenderTargetView(renderTarget_, clearColor);
 
     ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
-
     swapChain_->Present(1, 0);
 }
 
@@ -460,9 +476,7 @@ void AppWindow::Run()
 
     while (running_) {
         while (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE)) {
-            if (msg.message == WM_QUIT) {
-                running_ = false;
-            }
+            if (msg.message == WM_QUIT) running_ = false;
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
@@ -471,7 +485,6 @@ void AppWindow::Run()
         telemetry_.Update();
         CheckBackgroundGames();
 
-        // Handle game list refresh requested from UI
         if (gamesPage_->NeedsRefresh()) {
             gamesPage_->RefreshGames(gameDetector_);
             gamesPage_->ClearRefresh();

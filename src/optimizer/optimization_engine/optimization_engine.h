@@ -1,4 +1,7 @@
 #pragma once
+// ─────────────────────────────────────────────────────────────────────────────
+// FILE : src/optimizer/optimization_engine/optimization_engine.h   [MODIFIED]
+// ─────────────────────────────────────────────────────────────────────────────
 
 #include "optimizer/process_optimizer/process_optimizer.h"
 #include "optimizer/memory_optimizer/memory_optimizer.h"
@@ -8,6 +11,7 @@
 #include "optimizer/registry_optimizer/registry_optimizer.h"
 #include "optimizer/restore_engine/restore_engine.h"
 #include "detector/game_detector/game_db.h"
+#include "thermal/thermal_manager.h"           // ← NEW
 
 #include <string>
 #include <functional>
@@ -26,6 +30,8 @@ struct OptimizationResult {
     bool   extremeModeApplied;
     bool   networkOptimized;
     bool   registryTweaked;
+    bool   thermalMaximized;              // ← NEW
+    int    fanControllersFound;           // ← NEW
     std::string optimizationProfile;
 };
 
@@ -34,25 +40,30 @@ public:
     OptimizationResult Optimize(
         const std::string&                            gameName,
         const GameCore::Detector::GameRequirements*   requirements,
-        const GameCore::Detector::HardwareCapability*  capability,
-        ProgressCallback                               progressCb = nullptr,
-        bool                                            extremeMode = false);
+        const GameCore::Detector::HardwareCapability* capability,
+        ProgressCallback                               progressCb  = nullptr,
+        bool                                           extremeMode = false);
 
     void Restore();
 
     bool IsOptimized() const { return restoreEngine_.IsActive(); }
+
     const OptimizationSnapshot& GetSnapshot() const {
         return restoreEngine_.GetSnapshot();
     }
 
+    // Exposed so Telemetry can pull LHM readings directly
+    Thermal::ThermalManager& GetThermal() { return thermal_; }  // ← NEW
+
 private:
-    ProcessOptimizer  processOptimizer_;
-    MemoryOptimizer   memoryOptimizer_;
-    CpuOptimizer      cpuOptimizer_;
-    ServiceOptimizer  serviceOptimizer_;
-    NetworkOptimizer  networkOptimizer_;
-    RegistryOptimizer registryOptimizer_;
-    RestoreEngine     restoreEngine_;
+    ProcessOptimizer       processOptimizer_;
+    MemoryOptimizer        memoryOptimizer_;
+    CpuOptimizer           cpuOptimizer_;
+    ServiceOptimizer       serviceOptimizer_;
+    NetworkOptimizer       networkOptimizer_;
+    RegistryOptimizer      registryOptimizer_;
+    RestoreEngine          restoreEngine_;
+    Thermal::ThermalManager thermal_;           // ← NEW
 
     static void Report(const ProgressCallback& cb,
                        float progress,

@@ -1,3 +1,5 @@
+# FILE : src/optimizer/CMakeLists.txt  [MODIFIED]
+
 add_library(GameCore_Optimizer STATIC
     process_optimizer/process_optimizer.cpp
     memory_optimizer/memory_optimizer.cpp
@@ -26,6 +28,7 @@ target_link_libraries(GameCore_Optimizer
         GameCore_Core
         GameCore_Scanner
         GameCore_Detector
+        GameCore_Thermal
         powrprof
         psapi
         shell32

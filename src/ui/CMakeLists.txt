@@ -1,3 +1,5 @@
+# FILE : src/ui/CMakeLists.txt  [MODIFIED]
+
 add_library(GameCore_UI STATIC
     app_window.cpp
     system_tray.cpp
@@ -28,8 +30,9 @@ target_link_libraries(GameCore_UI
         GameCore_Monitor
         GameCore_Detector
         GameCore_Optimizer
+        GameCore_Thermal
         imgui
         dwmapi
         comctl32
-        Shell32 
+        Shell32
 )
